@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netushki - Форма заявки</title>
+    <style>
+        :root {
+            --primary: #6e45e2;
+            --secondary: #88d3ce;
+            --dark: #1a1a2e;
+            --light: #f1f1f1;
+            --accent: #ff7e5f;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--dark), #16213e);
+            color: var(--light);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .form-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            width: 100%;
+            max-width: 500px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .form-title {
+            text-align: center;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(110, 69, 226, 0.3);
+        }
+        
+        textarea.form-input {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .form-submit {
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.2s;
+        }
+        
+        .form-submit:hover {
+            transform: translateY(-3px);
+        }
+        
+        .message {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            text-align: center;
+            display: none;
+        }
+        
+        .message.success {
+            background-color: rgba(76, 175, 80, 0.2);
+            border: 1px solid #4CAF50;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2 class="form-title">Форма заявки</h2>
+        <form id="tg-form">
+            <div class="form-group">
+                <label for="user-id" class="form-label">ID уровня:</label>
+                <input type="text" id="user-id" class="form-input" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="comment" class="form-label">Комментарий:</label>
+                <textarea id="comment" class="form-input"></textarea>
+            </div>
+            
+            <button type="submit" class="form-submit">Отправить заявку</button>
+        </form>
+        
+        <div id="success-message" class="message success" style="display: none;">
+            Заявка успешно отправлена!
+        </div>
+    </div>
+
+    <script>
+        const botToken = "8128005522:AAHJIp5Y541mjqEu0StNwKAksAtetSItLls";
+        const chatId = "6657232556";
+        
+        document.getElementById("tg-form").addEventListener("submit", function(e) {
+            e.preventDefault();
+            
+            const userId = document.getElementById("user-id").value;
+            const comment = document.getElementById("comment").value;
+            
+            const text = `НОВЫЙ РЕКВЕСТ :>\n\nID: ${userId}\nКомментарий: ${comment || 'Нет комментария'}`;
+            
+            // Показываем загрузку
+            const submitBtn = this.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Отправка...';
+            
+            fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(text)}`)
+                .then(response => {
+                    if (response.ok) {
+                        // Показываем успешное сообщение
+                        document.getElementById('success-message').style.display = 'block';
+                        document.getElementById('tg-form').reset();
+                        
+                        // Прячем сообщение через 3 секунды
+                        setTimeout(() => {
+                            document.getElementById('success-message').style.display = 'none';
+                        }, 3000);
+                    } else {
+                        alert('Ошибка при отправке заявки');
+                    }
+                })
+                .catch(() => alert('Ошибка сети'))
+                .finally(() => {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Отправить заявку';
+                });
+        });
+    </script>
+</body>
+</html>
