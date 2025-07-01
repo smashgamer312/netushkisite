@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netushki :></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6e45e2;
+            --secondary: #88d3ce;
+            --dark: #1a1a2e;
+            --light: #f1f1f1;
+            --accent: #ff7e5f;
+            --donate: #FF4242;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--dark), #16213e);
+            color: var(--light);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        
+        header {
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .logo {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 1rem;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .tagline {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            margin-bottom: 2rem;
+            animation: fadeIn 2s ease-in-out;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+        
+        .social-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            color: white;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            transform: translateY(0);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .social-link:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        .social-link.discord {
+            background: linear-gradient(45deg, #5865F2, #8ea1e1);
+        }
+        
+        .social-link.telegram {
+            background: linear-gradient(45deg, #0088cc, #00aced);
+        }
+        
+        .social-link.youtube {
+            background: linear-gradient(45deg, #FF0000, #e63946);
+        }
+        
+        .social-link.donate {
+            background: linear-gradient(45deg, var(--donate), #ff6b6b);
+            animation: pulse 2s infinite;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        section {
+            padding: 3rem 0;
+            position: relative;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            border-radius: 3px;
+        }
+        
+        .rules-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .rule-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .rule-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .rule-card:hover {
+            transform: translateY(-10px) !important;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .rule-number {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 10px rgba(110, 69, 226, 0.4);
+        }
+        
+        .rule-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 66, 66, 0.7); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(255, 66, 66, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 66, 66, 0); }
+        }
+        
+        /* Анимации для появления элементов при скролле */
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 2.5rem;
+            }
+            
+            .social-links {
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+            }
+            
+            .social-link {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+            
+            .rules-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Анимированный фон частиц -->
+    <div class="particles" id="particles-js"></div>
+    
+    <header>
+        <div class="container">
+            <h1 class="logo">Netushki</h1>
+            <p class="tagline">Сайт нетушки :></p>
+            
+            <div class="social-links">
+                <a href="https://discord.com/invite/YyPdeKDESa" class="social-link discord" target="_blank">
+                    <i class="fab fa-discord"></i> Discord сервер
+                </a>
+                <a href="https://t.me/+FqErRZgH_rg5YzZi" class="social-link telegram" target="_blank">
+                    <i class="fab fa-telegram"></i> Telegram канал
+                </a>
+                <a href="https://www.youtube.com/@Netushki302" class="social-link youtube" target="_blank">
+                    <i class="fab fa-youtube"></i> YouTube канал
+                </a>
+                <a href="https://www.donationalerts.com/r/netushki" class="social-link donate" target="_blank">
+                    <i class="fas fa-heart"></i> Поддержать меня :D
+                </a>
+            </div>
+        </div>
+    </header>
+    
+    <main class="container">
+        <section id="rules">
+            <h2 class="section-title">Правила стримов</h2>
+            <div class="rules-container">
+                <div class="rule-card">
+                    <div class="rule-number">1</div>
+                    <p class="rule-text">Запрещено размещение ссылок без разрешения</p>
+                </div>
+                <div class="rule-card">
+                    <div class="rule-number">2</div>
+                    <p class="rule-text">Запрещены обсуждения 18+ тем и контента</p>
+                </div>
+                <div class="rule-card">
+                    <div class="rule-number">3</div>
+                    <p class="rule-text">Жёсткие оскорбления и унижения не допускаются</p>
+                </div>
+                <div class="rule-card">
+                    <div class="rule-number">4</div>
+                    <p class="rule-text">Запрещены реальные угрозы (не в шуточной форме)</p>
+                </div>
+                <div class="rule-card">
+                    <div class="rule-number">5</div>
+                    <p class="rule-text">Злоупотребление матами и ненормативной лексикой</p>
+                </div>
+                <div class="rule-card">
+                    <div class="rule-number">6</div>
+                    <p class="rule-text">Политические обсуждения запрещены</p>
+                </div>
+                <div class="rule-card">
+                    <div class="rule-number">7</div>
+                    <p class="rule-text">Обсуждение террористических действий строго запрещено</p>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <p>&copy; 2025 Netushki. Подпишись на меня :></p>
+    </footer>
+    
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        // Инициализация частиц
+        document.addEventListener('DOMContentLoaded', function() {
+            particlesJS('particles-js', {
+                "particles": {
+                    "number": {
+                        "value": 80,
+                        "density": {
+                            "enable": true,
+                            "value_area": 800
+                        }
+                    },
+                    "color": {
+                        "value": "#6e45e2"
+                    },
+                    "shape": {
+                        "type": "circle",
+                        "stroke": {
+                            "width": 0,
+                            "color": "#000000"
+                        },
+                        "polygon": {
+                            "nb_sides": 5
+                        }
+                    },
+                    "opacity": {
+                        "value": 0.5,
+                        "random": false,
+                        "anim": {
+                            "enable": false,
+                            "speed": 1,
+                            "opacity_min": 0.1,
+                            "sync": false
+                        }
+                    },
+                    "size": {
+                        "value": 3,
+                        "random": true,
+                        "anim": {
+                            "enable": false,
+                            "speed": 40,
+                            "size_min": 0.1,
+                            "sync": false
+                        }
+                    },
+                    "line_linked": {
+                        "enable": true,
+                        "distance": 150,
+                        "color": "#6e45e2",
+                        "opacity": 0.4,
+                        "width": 1
+                    },
+                    "move": {
+                        "enable": true,
+                        "speed": 2,
+                        "direction": "none",
+                        "random": false,
+                        "straight": false,
+                        "out_mode": "out",
+                        "bounce": false,
+                        "attract": {
+                            "enable": false,
+                            "rotateX": 600,
+                            "rotateY": 1200
+                        }
+                    }
+                },
+                "interactivity": {
+                    "detect_on": "canvas",
+                    "events": {
+                        "onhover": {
+                            "enable": true,
+                            "mode": "grab"
+                        },
+                        "onclick": {
+                            "enable": true,
+                            "mode": "push"
+                        },
+                        "resize": true
+                    },
+                    "modes": {
+                        "grab": {
+                            "distance": 140,
+                            "line_linked": {
+                                "opacity": 1
+                            }
+                        },
+                        "bubble": {
+                            "distance": 400,
+                            "size": 40,
+                            "duration": 2,
+                            "opacity": 8,
+                            "speed": 3
+                        },
+                        "repulse": {
+                            "distance": 200,
+                            "duration": 0.4
+                        },
+                        "push": {
+                            "particles_nb": 4
+                        },
+                        "remove": {
+                            "particles_nb": 2
+                        }
+                    }
+                },
+                "retina_detect": true
+            });
+            
+            // Анимация появления карточек при скролле
+            const ruleCards = document.querySelectorAll('.rule-card');
+            
+            function checkVisibility() {
+                ruleCards.forEach((card, index) => {
+                    const cardTop = card.getBoundingClientRect().top;
+                    const windowHeight = window.innerHeight;
+                    
+                    if (cardTop < windowHeight - 100) {
+                        setTimeout(() => {
+                            card.classList.add('visible');
+                        }, index * 150);
+                    }
+                });
+            }
+            
+            // Проверяем при загрузке
+            checkVisibility();
+            
+            // И при скролле
+            window.addEventListener('scroll', checkVisibility);
+            
+            // Плавный скролл для якорей
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
